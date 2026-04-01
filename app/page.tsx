@@ -1,0 +1,42 @@
+import Navbar from '@/components/layout/Navbar'
+import Footer from '@/components/layout/Footer'
+import HeroSection from '@/components/landing/HeroSection'
+import EventosSection from '@/components/landing/EventosSection'
+import StreamingSection from '@/components/landing/StreamingSection'
+import AnunciosSection from '@/components/landing/AnunciosSection'
+import DevotionalBlock from '@/components/landing/DevotionalBlock'
+import SedesSection from '@/components/landing/SedesSection'
+import NuevoVisitanteSection from '@/components/landing/NuevoVisitanteSection'
+import ComunidadSection from '@/components/landing/ComunidadSection'
+import {
+  getAnunciosActivos,
+  getEventosProximos,
+  getPromesaDelDia,
+  getSedesActivas,
+} from '@/lib/queries/landing'
+
+export default async function HomePage() {
+  const [anuncios, eventos, promesa, sedes] = await Promise.all([
+    getAnunciosActivos(),
+    getEventosProximos(),
+    getPromesaDelDia(),
+    getSedesActivas(),
+  ])
+
+  return (
+    <>
+      <Navbar />
+      <main className="pt-0">
+        <HeroSection slides={anuncios} />
+        <EventosSection eventos={eventos} />
+        <StreamingSection />
+        <AnunciosSection anuncios={anuncios} />
+        <DevotionalBlock promesa={promesa} />
+        <SedesSection sedes={sedes} />
+        <NuevoVisitanteSection />
+        <ComunidadSection />
+      </main>
+      <Footer />
+    </>
+  )
+}
