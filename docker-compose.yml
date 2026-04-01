@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local
+    volumes:
+      - nextjs_cache:/app/.next/cache
+    restart: unless-stopped
+
+volumes:
+  nextjs_cache:
