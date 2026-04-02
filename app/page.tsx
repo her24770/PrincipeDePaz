@@ -13,21 +13,23 @@ import {
   getEventosProximos,
   getPromesaDelDia,
   getSedesActivas,
+  getHeroImages,
 } from '@/lib/queries/landing'
 
 export default async function HomePage() {
-  const [anuncios, eventos, promesa, sedes] = await Promise.all([
+  const [anuncios, eventos, promesa, sedes, heroImages] = await Promise.all([
     getAnunciosActivos(),
     getEventosProximos(),
     getPromesaDelDia(),
     getSedesActivas(),
+    getHeroImages(),
   ])
 
   return (
     <>
       <Navbar />
       <main className="pt-0">
-        <HeroSection slides={anuncios} />
+        <HeroSection heroImages={heroImages} />
         <EventosSection eventos={eventos} />
         <StreamingSection />
         <AnunciosSection anuncios={anuncios} />

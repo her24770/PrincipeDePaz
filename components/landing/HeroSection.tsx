@@ -1,11 +1,22 @@
-import { AnuncioRow } from '@/lib/queries/landing'
+'use client'
+
+import { useState, useEffect } from 'react'
 
 interface HeroSectionProps {
-  slides: AnuncioRow[]
+  heroImages: string[]
 }
 
-export default function HeroSection({ slides }: HeroSectionProps) {
-  const hasSlides = slides.length > 0
+export default function HeroSection({ heroImages }: HeroSectionProps) {
+  const [current, setCurrent] = useState(0)
+  const hasImages = heroImages.length > 0
+
+  useEffect(() => {
+    if (!hasImages || heroImages.length < 2) return
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % heroImages.length)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [heroImages.length, hasImages])
 
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
@@ -13,25 +24,24 @@ export default function HeroSection({ slides }: HeroSectionProps) {
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-black/45 z-10" />
 
-        {hasSlides ? (
-          slides.slice(0, 3).map((slide, i) => (
+        {hasImages ? (
+          heroImages.map((url, i) => (
             <div
-              key={slide.id}
-              className="carousel-slide absolute inset-0 bg-cover bg-center"
+              key={url}
+              className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
               style={{
-                backgroundImage: `url('${slide.urlMedia}')`,
-                animationDelay: i > 0 ? `${i * 4}s` : undefined,
+                backgroundImage: `url('${url}')`,
+                opacity: i === current ? 1 : 0,
               }}
             />
           ))
         ) : (
-          /* Gradient fallback when DB has no anuncios */
           <div className="absolute inset-0 bg-gradient-to-br from-primary to-primary-container" />
         )}
       </div>
 
       {/* Content */}
-      <div className="relative z-20 max-w-7xl mx-auto px-8 w-full">
+      <div className="relative z-20 max-w-7xl mx-auto px-8 w-full py-24 md:py-36">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-3 bg-white/20 backdrop-blur-md px-4 py-2 rounded-lg mb-8 border border-white/30">
             <span className="w-2 h-2 bg-secondary-fixed rounded-full animate-pulse" />
